@@ -675,9 +675,8 @@
  - "∇":                                         	#  0x2207
      - test: 
          if: "$Verbosity!='Terse'"
-         then: [T: ""]                        	# 	(en: 'the', google translation)
-     - 
-     T: "gradiente (nabla)"                   	# 	(en: 'gradient of', google: 'gradiente di')
+         then: [T: ""]                        # 	(en: 'the', google translation)
+     -  T: "gradiente (nabla)"                   # (en: 'gradient of', google: 'gradiente di')
  - "∈":                                         	#  0x2208
      - test:
         if: "$SpeechStyle != 'ClearSpeak'"
@@ -846,21 +845,21 @@
          then: [T: "è"]                         	# 	(en: 'is', google translation)
      - T: "asintoticamente uguale a"            	# 	(en: 'asymptotically equal to')
  - "≄":                                         	#  0x2244
-     - [T: "non"]        	# 	(en: 'not asymptotically equal to')
+     - T: "non"        # 	(en: 'not asymptotically equal to')
      - test: 
          if: "$Verbosity!='Terse'"
-            then: [T: "è"]                         	# 	(en: 'is', google translation)
-     - T: "asintoticamente uguale a"        	# 	(en: 'not asymptotically equal to')
+         then: [T: "è"]                         # 	(en: 'is', google translation)
+     - T: "asintoticamente uguale a"        # 	(en: 'not asymptotically equal to')
  - "≅":                                         	#  0x2245
      - test: 
          if: "$Verbosity!='Terse'"
          then: [t: "è"]                         	# 	(en: 'is', google translation)
      - T: "approssimativamente uguale a"        	# 	(en: 'approximately equal to')
- - "≆":                                         	#  0x2246
-     - test: 
+ - "≆":
+     - test:
          if: "$Verbosity!='Terse'"
-         then: [T: "è"]                         	# 	(en: 'is', google translation)
-     - T: "approssimativamente ma non effettivamente uguale a"	# 	(en: 'approximately but not actually equal to')
+         then: [T: "è"]
+     - T: "approssimativamente ma non effettivamente uguale a"
  - "≇":                                         	#  0x2247
      - test: 
          if: "$Verbosity!='Terse'"
@@ -872,7 +871,7 @@
          then: [T: "è"]                         	# 	(en: 'is', google translation)
      - T: "circa uguale a"                      	# 	(en: 'almost equal to', MathPlayer: 'uguale circa', google: 'quasi uguale a')
  - "≉":                                         	#  0x2249
-     - [T: "non"]
+     - T: "non"
      - test: 
          if: "$Verbosity!='Terse'"
          then: [T: "è"]                         	# 	(en: 'is', google translation)
@@ -950,7 +949,7 @@
          then: [T: "è"]                         	# 	(en: 'is', google translation)
      - T: "congruente  a"                          	# 	(en: 'identical to')
  - "≢":                                         	#  0x2262
-     - [T. "non"]
+     - T: "non"
      - test: 
          if: "$Verbosity!='Terse'"
          then: [T: "è"]                         	# 	(en: 'is', google translation)
@@ -988,19 +987,19 @@
          then: [T: "è"]                         	# 	(en: 'is', google translation)
      - T: "tra"                                 	# 	(en: 'between')
  - "≭":                                         	#  0x226d
-     - [T: "non"]
+     - T: "non"
      - test: 
          if: "$Verbosity!='Terse'"
          then: [T: "è"]                         	# 	(en: 'is', google translation)
      - T: "equivalente a"                	# 	(en: 'not equivalent to', MathPlayer: 'diverso da', google: 'non equivalente a')
  - "≮":                                         	#  0x226e
-     - [T: "non"
+     - T: "non"
      - test: 
          if: "$Verbosity!='Terse'"
          then: [T: "è"]                         	# 	(en: 'is', google translation)
      - T: "minore di"                       	# 	(en: 'not less than')
  - "≯":                                         	#  0x226f
-     - [T: "non"]
+     - T: "non"
      - test: 
          if: "$Verbosity!='Terse'"
          then: [T: "è"]                         	# 	(en: 'is', google translation)
@@ -1074,17 +1073,17 @@
          then: [T: "è un"]                      	# 	(en: 'is a', google translation)
      - T: "sovrainsieme di"                     	# 	(en: 'superset of')
  - "⊄":                                         	#  0x2284
-    - [T: "non"]
+    - T: "non"
     - test: 
         if: "$Verbosity!='Terse'"
         then: [T: "è"]                         	# 	(en: 'is', google translation)
-     - T: "un sottoinsieme di"              	# 	(en: 'not a subset of')
+    - T: "un sottoinsieme di"              # 	(en: 'not a subset of')
  - "⊅":                                         	#  0x2285
-     - [T: "non"]
+     - T: "non"
      - test: 
          if: "$Verbosity!='Terse'"
          then: [t: "è"]                         	# 	(en: 'is', google translation)
-     - t: "non un sovrainsieme di"             	# 	(en: 'not a superset of')
+     - T: "un sovrainsieme di"             	# 	(en: 'not a superset of')
  - "⊆":                                         	#  0x2286
      - test: 
          if: "$Verbosity!='Terse'"
@@ -1481,9 +1480,7 @@
  - "⓳": [T: "diciannove cerchiato"]          	#  0x24f3	(en: 'black circled nineteen', google translation)
  - "⓴": [T: "venti cerchiato"]            	#  0x24f4	(en: 'black circled twenty', google translation)
  - "⓵-⓽":                                       	#  0x24f5 - 0x24fe
-    - 
-    T: "doppio cerchiato" 
-    # 	(en: 'double circled', google translation)
+    -    T: "doppio cerchiato"     # 	(en: 'double circled', google translation)
     - spell: "translate('.', '⓵⓶⓷⓸⓹⓺⓻⓼⓽', '123456789')"
  - "⓾": [T: "dieci cerchiato doppio"]           	#  0x24fe	(en: 'double circled ten', google translation)
  - "⓿": [T: "zero cerchiato nero"]              	#  0x24ff	(en: 'black circled zero', google translation)
@@ -1528,7 +1525,7 @@
  - "◅": [t: "puntatore a sinistra bianco"]      	#  0x25c5	(en: 'white left pointing pointer', MathPlayer: 'white left pointing pointer', google: 'puntatore di puntamento a sinistra bianco')
  - "◆": [T: "diamante nero"]                    	#  0x25c6	(en: 'black diamond', MathPlayer: 'black diamond')
  - "◇": [T: "diamante bianco"]                  	#  0x25c7	(en: 'white diamond', MathPlayer: 'white diamond')
- - "◈": [: "diamante bianco contenente un piccolo diamante nero"]	#  0x25c8	(en: 'white diamond containing black small diamond', MathPlayer: 'white diamond containing black diamond', google: 'diamante bianco contenente piccolo diamante nero')
+ - "◈": [T: "diamante bianco contenente un piccolo diamante nero"]	#  0x25c8	(en: 'white diamond containing black small diamond', MathPlayer: 'white diamond containing black diamond', google: 'diamante bianco con piccolo diamante nero')
  - "◉": [T: "fisheye"]                          	#  0x25c9
  - "◊": [T: "losanga"]                          	#  0x25ca	(en: 'lozenge', MathPlayer: 'lozenge')
  - "○": [T: "cerchio bianco"]                   	#  0x25cb	(en: 'white circle', MathPlayer: 'white circle')
@@ -1684,9 +1681,9 @@
  - "⟂":                                         	#  0x27c2
      - test: 
          if: "$Verbosity!='Terse'"
-         then: [:T "è"]                         	# 	(en: 'is', google translation)
-     - T: "perpendicolare "                     	# 	(en: 'perpendicular to', google: 'perpendicolare a')
- - "⟃":  t                                       	#  0x27c3
+         then: [T: "è"]                         	# 	(en: 'is', google translation)
+     - T: "ortogonale a"                     	# 	(en: 'perpendicular to', google: 'perpendicolare a')
+ - "⟃":                                         	#  0x27c3
      - test: 
          if: "$Verbosity!='Terse'"
          then: [T: "è un"]                         	# 	(en: 'is', google translation)
@@ -1771,7 +1768,7 @@
  - "⤍": [T: "freccia destra a doppio tratto"]	#  0x290d	(en: 'rightwards double dash arrow', MathPlayer: 'rightwards double dash arrow', google: 'freccia a doppia dash a destra')
  - "⤎": [T: "freccia sinistra a triplo tratto"]        	#  0x290e	(en: 'leftwards triple dash arrow', MathPlayer: 'leftwards triple dash arrow', google: 'freccia tripla del cruscotto a sinistra')
  - "⤏": [T: "freccia destra a triplo tratto"]	#  0x290f	(en: 'rightwards triple dash arrow', MathPlayer: 'rightwards triple dash arrow', google: 'freccia a tre dash a destra')
-  - "⤐": [T: "freccia destra a triplo tratto e a due punte"]	#  0x2910	(en: 'rightwards two headed triple dash arrow', MathPlayer: 'rightwards two headed triple dash arrow', google: 'freccia tripla del cruscotto a due tappeti')
+ - "⤐": [T: "freccia destra a triplo tratto e a due punte"]	#  0x2910	(en: 'rightwards two headed triple dash arrow', MathPlayer: 'rightwards two headed triple dash arrow', google: 'freccia tripla del cruscotto a due tappeti')
  - "⤑": [T: "freccia destra con gambo tratteggiato"]	#  0x2911	(en: 'rightwards arrow with dotted stem', MathPlayer: 'rightwards arrow with dotted stem', google: 'freccia a destra con stelo tratteggiato')
  - "⤒": [T: "freccia in alto verso barra"]  	#  0x2912	(en: 'upwards arrow to bar', MathPlayer: 'upwards arrow to bar', google: 'freccia verso l'alto al bar')
  - "⤓": [T: "freccia in basso verso barra"]	#  0x2913	(en: 'downwards arrow to bar', MathPlayer: 'downwards arrow to bar', google: 'freccia verso il basso al bar')
@@ -3104,7 +3101,7 @@
  - "𝔸-𝕐":                                       	#  0x1d504 - 0x1d51d ('z' version is reserved)
     - test: 
          if: "$Verbosity!='Terse'"
-         then: [t: "doppio colpito"]            	# 	(en: 'double struck', google translation)
+         then: [T: "grassetto"]            	# 	(en: 'double struck', google translation)
     - spell: "translate('.', '𝔸𝔹𝔺𝔻𝔼𝔽𝔾𝔿𝕀𝕁𝕂𝕃𝕄𝕅𝕆𝕇𝕈𝕉𝕊𝕋𝕌𝕍𝕎𝕏𝕐', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"
 
  - "-":                                       	#  0xf080 - 0xf098
