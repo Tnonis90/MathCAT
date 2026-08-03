@@ -650,11 +650,11 @@
   - "          [count(../preceding-sibling::*)!=count(../../preceding-sibling::*)]"
   - "    )"
   replace:
-  - t: "the"      # phrase('the' 1 by 2 matrix)
+  - T: ""      # phrase('the' 1 by 2 matrix)
+  - T: "matrice diagonale"
   - x: count(*)
-  - t: "by"       # phrase(the 1 'by' 2 matrix)
+  - T: "per"       # phrase(the 1 'by' 2 matrix)
   - x: count(*[self::m:mtr][1]/*)
-  - t: "diagonal matrix"   # phrase(the 2 by 2 'diagonal matrix')
   - pause: long
   - insert:
       # this lists the diagonal 'mtd's to be read, and they say "column nnn" before reading the contents
