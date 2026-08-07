@@ -62,15 +62,16 @@
       - else_if: "*[2][text()='3']"
         then: [T: "radice cubica"]        # phrase(the 'cube root' of x)
       - else_if: "*[2][not(contains(., '.'))]"
-        then: [x: "ToOrdinal(*[2])", T: "radice"]        # phrase(the square 'root' of x)
+        then: [T: "radice", x: "ToOrdinal(*[2])"]        # phrase(the square 'root' of x)
       else:
+      - T: "radice"
       - test:
           if: "*[2][self::m:mi][string-length(.)=1]"
           then:
           - x: "*[2]"
-          - pronounce: [{text: "-th"}, {ipa: "θ"}, {sapi5: "th"}, {eloquence: "T"}]
+          #- pronounce: [{text: "-th"}, {ipa: "θ"}, {sapi5: "th"}, {eloquence: "T"}]
           else: [x: "*[2]"]
-      - T: "radice"        # phrase(the square 'root' of)
+      #- T: "radice"        # phrase(the square 'root' of)
   - test:
       if: "$Verbosity!='Terse'"
       then: [T: "di"]        # phrase(the square root 'of' x)

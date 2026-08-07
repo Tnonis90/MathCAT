@@ -1,71 +1,339 @@
 ---
 - include: "../../definitions.yaml"
-# Lines starting with "#" are a comment
-# Each definition in this file is of the form
-# - name: { "...", "..." "..." }
-# For numbers, 
-# - name: [] "...", "..." "..." ]
 
-
-# If an "intent" is used, the 'terse:medium:verbose' speech for the intent name is given here for a prefix||infix||postfix||function fixity
-# If only one ":" is used, it the first part is used for 'terse' and the second part is used for 'medium' and 'verbose'
+# If an "intent" is used, the 'terse:medium:verbose' speech for the intent name is given here for a prefix||infix||postfix||function||nofix||silent fixity
+# If only one ":" is used, the first part is used for 'terse' and the second part is used for 'medium' and 'verbose'
 # If no ":"s are used, the same speech is used for all forms
 # If bracketing words make sense, they are separated with ";"s
 # Intent mappings must specify whether they are "prefix", "infix", "postfix", or "function" with an "=" sign
-# If there are multiple fixities (e.g., see transpose), they are separated with "||
+# If there are multiple fixities (e.g., see transpose), they are separated with "||"
 #   for readability, spaces can be used around any of the delimiter characters
 # Note: if there are multiple fixities, the first one is used if the fixity is not given in the intent
 - IntentMappings: {
-    "indexed-by": "infix= ; pedice; fine pedice",
+    "binomial": "infix=binomiale; su; fine binomiale",
+
+    ### Functions and Inverses
+    # "closed-interval": "other=closed-interval; from,to; end closed-interval",
+    # "closed-interval":"function=closed interval between; and", #NOTE: Check test, does not follow this pattern
+    #"closed-open-interval":"function=interval between; included and",
+    #"open-closed-interval":"function=interval between; and included",
+    #"open-interval":"function=open interval between; and",
+    "inverse":"function=inversa || postfix=inversa", 
+
+    "domain": "function= ; dominio",
+    "codomain": "function= ; codominio",
+
+    "image":"function=immagine", 
+    #"fraction":"function=fraction; over; end fraction", # NOTE: Fails
+    "mixed-fraction":"infix=e", # NOTE: in website says function, but follow infix speech pattern.
+    "quotient":"function=parte intera; diviso", # NOTE: Logic somewhere here failing, becomes "divided by of x comma, y" instead of "integer part of x divided by y"
+    "evaluated-at":"infix=valutato in",
+    "remainder":"function=resto; diviso per",
+
+    "max":"function=massimo",
+    "min":"function=minimo",
+
+    "power":"infix=alla",
+    "root":"function=radice",
+
+    "greatest-common-divisor": "function=mcd: il mcd: il massimo comune divisore", 
+    "least-common-multiple": "function=mcm: il mcm: il massimo comune divisore", # In webpage typo "lest common"
+
+    "absolute-value": "function= ; valore assoluto: il valore assoluto: il valore assoluto; fine valore assoluto",
+    "complex-conjugate":"function=coniugato complesso",
+    "complex-arg":"function=argomento",
+    "real-part": "function=parte reale",
+    "imaginary-part": "function=imaginary part: the imaginary part: parte immaginaria",
+
+    "polar-coordinate":"function=coordinata polare; virgola",
+    "spherical-coordinate":"function=coordinata sferica; virgola; virgola",
+    "cartesian-coordinate":"function=coordinata cartesiana; virgola",
+    "coordinate":"function=coordinata; virgola",
+    "floor":"function=parte intera inferiore",
+    "ceiling":"function=parte intera inferiore",
+    "round":"function=valore arrotondato",
+    "fractional-part":"function=parte frazionaria",
+
+
+    ### Calculus
+    # "definite-integral":"function=integral over || function=integral from; to", # Property ???
+    # "derivative":"function=the derivative; with respect to", # Property ???
+    # "partial-derivative":"function=partial", ## Note, included with infix, but separately under calculus tab has ??? for functionality
+
+    "limit": "prefix=limite per:limite per",
+    "tends-to":"infix=tendente a",
+    "tends-to-from-above":"infix=tendente a da destra",
+    "tends-to-from-below":"infix=tendente a da sinistra",
+
+
+    ### Sets
+    "set": "function= ; insieme: lìinsieme",
+    "set-difference":"function=differenza tra insiemi; and || infix=meno", # NOTE: not tested
+    "complement":"function=complemento",
+    #"empty-set":"nofix=empty set",
+    "cardinality":"function=cardinalità", # NOTE: does not have a defined speech template in website
+    "list":"function=list",
+    "tuple": "function= ; tupla: la tupla",
+
+
+    ### Sequence and Series
+"sum":"function= ; somma su : somma ; ",
+"product":"function=prodotto || function=prodotto su || function=prodotto da; a",
+    ### Elementary classical functions
+    "sine":"function=sen: seno",
+    "cosine":"function=cos: coseno",
+    "tangent":"function=tan: tangente",
+    "secant":"function=sec: secant",
+    "cosecant":"function=cosec: cosecante",
+    "cotangent":"function=cotan: cotangente",
+
+    "arcsine":"function=arcoseno",
+    "arccosine":"function=arcocoseno",
+    "arctangent":"function=arcotangente",
+    "arcsecant":"function=arcosecante",
+    "arccosecant":"function=arcocosecante",
+    "arccotangent":"function=arcocotangente",
+
+    "hyperbolic-sine":"function=sen-h: seno iperbolico",
+    "hyperbolic-cosine":"function=cos-h: coseno iperbolico",
+    "hyperbolic-tangent":"function=tan-h: tangente iperbolica",
+    "hyperbolic-secant":"function=sec-h: secante iperbolica",
+    "hyperbolic-cosecant":"function=cosec-h: cosecante iperbolica",
+    "hyperbolic-cotangent":"function=cotan-h: cotangente iperbolica",
+
+    "arc-hyperbolic-sine":"function=arcsen-h: arcoseno iperbolico",
+    "arc-hyperbolic-cosine":"function=arc-cos-h: arcocoseno iperbolico",
+    "arc-hyperbolic-tangent":"function=arc-tan-h: arcotangente iperbolica",
+    "arc-hyperbolic-secant":"function=arc-sec: arcosecante iperbolica",
+    "arc-hyperbolic-cosecant":"function=arc-cosec-h, arcocosecante iperbolica",
+    "arc-hyperbolic-cotangent":"function=arc-cotangent-h, arcocotangente iperbolica",
+
+    "exponential":"function=esponenziale",
+    "natural-logarithm": "function=l n: logaritmo naturale: logaritmo naturale",
+    "logarithm":"function=log: logaritmo", ##Check arity 2 
+
+
+    ### Statistics and Probability
+    "mean":"function=media", 
+    "standard-deviation":"function=deviazione standard",
+    "variance":"function=varianza",
+    "median":"function=mediana",
+    "mode":"function=moda",
+
+    "conditional-probability":"function=probabilità; dato", # NOTE: Check test
+
+
+    ### Linear Algebra
+    "vector": "function= ; vettore || prefix=vettore", # prefix not tested, also prefix not on webpage
+    "matrix":"function=matrice", # NOTE: Failing test, recheck
+    "determinant":"function=determinante",
+    "adjugate":"function=aggiunta",
+    "magnitude":"function=modulo",
+    "norm": "function=; norma: norma: norma; fine norma",
+    "span":"function=span",
+
+    "unit-vector":"prefix=vettore unitario",
+
+    "identity-matrix":"nofix=matrice identità", # NOTE: no function specified
+    "transpose":"function=trasposta || postfix=trasposta", # postfix needs testing
+    "dimensional-product":"infix=per", # INFIX
+
+
+    ### Constants and Sets
+    "set-of-integers":"nofix=ℤ: insieme di tutti gli interi",
+    "set-of-reals":"nofix=ℝ: insieme dei numeri reali",
+    "set-of-rationals":"nofix=ℚ: insieme dei numeri razionali",
+    "set-of-natural-numbers":"nofix=ℕ: insieme dei numeri naturali",
+    "set-of-complex-numbers":"nofix=ℂ: insieme dei numeri complessi",
+    "set-of-primes":"nofix=ℙ: insieme dei numeri primi",
+
+    
+    ### Geometry
+    "line-segment":"prefix=segmento di retta",
+    "directed-line-segment":"prefix=segmento orientato", 
+    "line":"prefix=retta",
+    "ray":"prefix=raggio",
+    "arc":"prefix=arco",
+
+    "length":"function=lunghezza",
+    "area":"function=area",
+
+    "point":"prefix=punto",  ## NOTE: Has ??? for property in site. Should it be prefix? Or something else.
+
+    ### Separators
+    "time-separator":"infix=",
+
+    ### General Concepts 
+    "fenced-group":"function=gruppo delimitato", # appears both under general concepts and grouping
+     # NOTE: in site mentions "the pair x and y", due to being defined as function, needs the "of" keyword
+    "ordered-pair": "function= ; la coppia; and", # Needs to be tested, test converts "and" to "comma,"
+    "indexed-by": "infix= ; pedice; fine pedie: fine pedice: fine pedice",
+    # "indexed-by": "infix= ; indexed by; ",
+    
+    "highlight":"postfix=evidenziato",
+    "least-common-denominator":"function=minimo comune denominatore",
+    "rate":"infix=al",
+    "translation":"function= traslazione per; comma", # NOTE: not tested, changes "translation" -> "comma" in test
+    "constraint":"infix= ; con vincolo; ", 
+    
+    "binomial-coefficient":"infix=su",
+    "pochhammer":"function=permutazione",
+    "permutation-cycle":"function=ciclo di permutazione",
+    "embellished-name":"infix=con annotazione",
+
+    ### Grouping
+    "annotation":"infix= ; che è ;",              # NOTE: Follows the same order as indexed-by, in site listed as function. Should it be infix?
+    "braced-group":"function=raggruppato; fine raggruppamento",  # NOTE: not tested, site is missing "of" keyword function introduces
+    #"repeating-decimal":"function=repeating decimal", # NOTE: BREAKS TEST. Check again. Site is missing "of" keyword function introduces.
+
+
+    ### Other
+    ## Default fixity function
+    "curl": "function=rotore",
+    "divergence": "function=div:divergenza",
+    "gradient": "function=nabla:gradiente",
+    "laplacian": "function=laplaciano",
+
+    ## Default fixity prefix
+    "angle": "prefix=angolo",
+    "angle-measure": "prefix=misura dell'angolo",
+    "change": "prefix=variazione di",
+    "for-all": "prefix=per ogni",
+    "measured-angle": "prefix=angolo misurato",
+    "not": "prefix=non",
+    "number-of": "prefix=numero di",
+    "partial-derivative": "prefix=parziale",
+    "right-angle": "prefix=angolo retto",
+    "square-root-of": "prefix=radice quadrata di",
+    "there-does-not-exist": "prefix=non esiste",
+    "there-exists": "prefix=esiste",
+
+
+    ## Default fixity infix
+    "and": "infix=e",
+    "applied-to": "infix=applicato a",
+    "approximately": "infix=circa",
+    "congruent": "infix=congruente a",
+    "cartesian-product": "infix=prodotto cartesiano",
+    "composed-with": "infix=composto da",
+    "cross-product": "infix=prodotto: prodotto vettoriale: prodotto vettoriale",
+    "defined-as": "infix=definito come",
+    "divided-by": "infix=diviso per",
+    "divides": "infix=divide",
+    "does-not-belong-to": "infix=non appartiene a",
+    "does-not-divide": "infix=non divide",
+    "dot-product": "infix=prodotto scalare",
+    "downwards-diagonal-ellipsis": "infix=puntini diagonali discendenti",
+    "direct-product": "infix=prodotto diretto",
+    "element-of": "infix=elemento di",
+    "ellipsis": "infix=ellisse",
+    "equals": "infix=uguale a",
+    "equivalent-to": "infix=equivalente a",
+    "evaluates-to": "infix=si valuta in",
+    "given": "infix=dato",
+    "greater-than": "infix=maggiore di",
+    "greater-than-or-equal-to": "infix=maggiore o uguale a",
+    "identically-equals": "infix=identicamente uguale a",
+    "if-and-only-if": "infix=se e solo se",
+    "implies": "infix=implica",
+    "inner-product": "infix=prodotto interno",
+    "intersection": "infix=intersezione",
+    "less-than": "infix=minore di",
+    "less-than-or-equal-to": "infix=minore o uguale a",
+    "list-separator": "infix=virgola",
+    "maps-to": "infix=va in",
+    "member-of": "infix=membro di",
+    "minus-or-plus": "infix=meno o più",
+    "not-subset": "infix=non insieme di",
+    "not-superset": "infix=non sovrainsieme di",
+    "not-equal-to": "infix=non uguale a",
+    "not-member-of": "infix=non membro di",
+    "not-parallel-to": "infix=non parallelo a",
+    "obtained-from": "infix=ottenuto da",
+    "or": "infix=o",
+    "outer-product": "infix=prodotto esterno",
+    "parallel-to": "infix=parallelo a",
+    "perpendicular": "infix=perpendicolare a",
+    "plus": "infix=più || prefix=più", # Prefix not tested
+    "minus": "infix=meno || prefix=meno", # Prefix not tested
+    "plus-or-minus": "infix=più o meno",
+    "precedes": "infix=precede",
+    "proportional": "infix=proporzionale a",
+    "range-separator": "infix=a || prefix=da",
+    "ratio": "infix=rapporto",
+    "similar": "infix=simile a",
+    "subset": "infix=sottoinsieme di",
+    "subset-or-equal": "infix=sottoinsieme di o uguale a",
+    "succeeds": "infix=segue",
+    "such-that": "infix=tale che",
+    "superset": "infix=sovrainsieme di",
+    "superset-or-equal": "infix=sovrainsieme di o uguale a",
+    "tilde": "infix=tilde",
+    "times": "infix=per",
+    "union": "infix=unione",
+    "upwards-diagonal-ellipsis": "infix=puntini diagonali ascendenti",
+    "vertical-ellipsis": "infix=puntini verticali",
+    "xor": "infix=or esclusivo",
+
+    ## Default fixity postfix
+    "factorial": "postfix=fattoriale",
+    "percent": "postfix=percento",
+
+    ## Default fixity nofix
+    "diameter":"nofix=d: diametro",
+    "distance":"nofix=d; D: distanza",
+    "probability":"nofix=P: probabilità",
+    "radius":"nofix=r: raggio",
+    "volume":"nofix=V: volume || function=volume",
+    "exponential-e":"nofix=e",
+    "imaginary-i":"nofix=i",
+    "differential-d":"nofix=d",
+    "golden-ratio":"nofix=rapporto aureo",
+    
+
+    ## Other : Not tested, don't appear in https://w3c.github.io/mathml-docs/intent-core-concepts/
     "modified-variable": "silent= ",
-    "say-super": "infix=apice",   # used with 'mo' for superscripts (e.g, "<")
+    "say-super": "infix=sopra: apice: apice",   # used with 'mo' for superscripts (e.g, "<")
     "skip-super": "silent=",   # used with 'mo' for superscripts (e.g, "*")
-
-    "absolute-value": "function= ; valore assoluto: il valore assoluto di: il valore assoluto di; fine valore assoluto",
-    "binomial": "infix=binomiale; scegliere; fine binomiale",
-    "limit": "prefix=límite per",
-    "lim-sup": "prefix=lim sup per: il limite superiore per: il limite superiore per",
-    "lim-inf": "prefix=lim inf per: il limite inferiore per : il limite inferiore per",
-    "logarithm-with-base": "prefix=log base: il logaritmo in base: il log in base",
-    "minus": "infix=meno || prefix=meno",
-    "plus": "infix=più || prefix=più",
-
-    "transpose": "postfix=trasposta || function=trasposta",
-    "norm": "function=; regola: regola: la regola; fine regola",
-    "trace": "function=;traccia : traccia di: la traccia di; fine traccia",
-    "dimension": "function=; dimensióne : dimensióne di: la dimensióne di; fine dimensióne",
-    "homomorphism": "function= ; omomorfismo : omomorfismo di: l'omomorfismo di; fine omomorfismo",
-    "kernel": "function= ; nucleo : nucleo di: il nucleo di; fine nucleo",
-    "vector": "function= ; vettore || prefix=vettore",
-    "cross-product": "infix=vettoriale: prodotto vettoriale: prodotto vettoriale",
-    "dot-product": "infix=scalare: prodotto scalare: dot:prodotto scalare",
-
-    "divergence": "function= ; div: divergenza: divergenza; fine divergenza",
-    "curl": "function= ; rotore; fine rotore",
-    "gradient": "function= ; grad: gradiente: gradiente; fine gradiente",
-    "laplacian": "function=laplaciano",   
-
+    # "large-op": "infix=over || other=from,to",
+    "lim-sup": "prefix=lim sup per: limite superiore per: limite superiore per",
+    "lim-inf": "prefix=lim inf per: limite inferiore per : limite inferiore per",
+    "logarithm-with-base": "prefix=log in base: logaritmo in base: logaritmo in base",
+    # "pochhammer": "infix=permutazioni di",  # arguments are in reverse order, so can't work here
+    "trace": "function= ; traccia : traccia: la traccia; fine traccia",
+    "dimension": "function=; dimensione : dimensione: la dimensione; fine dimensione",
+    "homomorphism": "function= ; homomorfismo : omomorfismo: omomorfismo; end homomorphism",
+    "kernel": "function= ; nucleo : nucleo: il nucleo; fine nucleo",
+    
     "chemistry-concentration": "function= ; concentrazione: concentrazione di: la concentrazione di; fine concentrazione",
   }
 
+  # Names of functions that in terse mode don't say "of" (or it's equivalent in other languages)
+- TerseFunctionNames: {
+    "divergence", "del:gradient", "curl"
+  }
+
 - NavigationParts: {
+    # These are the parts of a formula that can be navigated to
     "large-op": "base; lower limit; upper limit",
-    "mfrac": "numerator;denominator",
-    "fraction": "numerator;denominator",
-    "msqrt": "root",
-    "square-root": "root",
-    "mroot": "root;root index",
-    "root": "root;root index",
-    "msub": "base;subscript",
-    "sub": "base;subscript",
-    "msup": "base;superscript",
-    "say-super": "base;superscript",
-    "skip-super": "base;superscript",
-    "power": "base;exponent",
-    "msubsup": "base;subscript;superscript",
-    "munder": "base;under limit",
-    "mover": "base;upper limit",
-    "munderover": "base;under limit;upper limit",
+    "mfrac": "numeratore; denominatore",
+    "fraction": "numeratore; denominatore",
+    "msqrt": "radice",
+    "square-root": "radice",
+    "mroot": "radice; indice radice",
+    "root": "radice; indice radice",
+    "msub": "base; pedice",
+    "sub": "base; pedice",
+    "logarithm-with-base": "base",
+    "indexed-by": "base; pedice",
+    "msup": "base; apice",
+    "say-super": "base; apice",
+    "skip-super": "base; apice",
+    "power": "base; esponente",
+    "msubsup": "base; pedice; apice",
+    "munder": "base; limite inferiore",
+    "mover": "base; limite superiore",
+    "munderover": "base; limite inferiore; limite superiore",
 
     # words for moving into and out of one of the parts (e.g., "move right 'out of' numerator, 'in' denominator")
     # it's a hack to put them here, but at least they are grouped with the other navigation parts
@@ -73,32 +341,41 @@
     "out": "fuori da",
   }
 
+- KnownWords: {
+    # MathCAT will put together some runs of three or more mi's (a common mistake), but skips those in alphabetical order.
+    # This is a list of exceptions so that they do get put together. Don't list words with repeated letters.
+
+    # I asked bard and chatgpt for formula words that are alphabetical, and they failed.
+    # Here are the words I managed to find, but it almost certainly not complete. Change the list for other languages.
+    "Abel", "aery", "ails", "airy", "amps", "ceil", "cents", "chop", "flux", "flow", "knot", "most"
+  }
+
 - SIPrefixes: {
-    "Q": "quetta", "R": "ronna", "Y": "yotta", "Z": "zetta", "E": "exa", "P": "peta", "T": "tera", "G": "giga", "M": "mega", "k": "kilo", "h": "etto", "da": "deca",
-    "d": "deci", "c": "centi", "m": "milli", "µ": "micro", "n": "nano", "p": "pico", "f": "femto", "a": "atto", "z": "zepto", "y": "yocto", "r": "ronto", "q": "quetto"
+    "Q": "quetta", "R": "ronna", "Y": "yotta", "Z": "zetta", "E": "exa", "P": "peta", "T": "tera", "G": "giga", "M": "mega", "k": "chilo", "h": "etto", "da": "deca",
+    "d": "deci", "c": "centi", "m": "milli", "µ": "micro", "n": "nano", "p": "pico", "f": "femto", "a": "atto", "z": "zepto", "y": "yocto", "r": "ronto", "q": "quecto"
   }
 
 # this is a list of all units that accept SIPrefixes
-# from www.bipm.org/documents/20126/41483022/SIBrochure-9-EN.pdf
+# from www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf
 #   Prefixes may be used with any of the 29 SI units with special names
 #   The SI prefixes can be used with several of accepted units, but not, for example, with the non-SI units of time.
 - SIUnits: {
     # base units
-    "A": "ampere",
+    "A": "amp",
     "cd": "candela",
-    "K": "grado kelvin", "K": "kelvin", # U+212A
+    "K": "kelvin", "K": "kelvin", # U+212A
     "g": "grammo",
-    "m": "metro",    
-    "mol": "mol",
+    "m": "metro",     # British spelling works for US also
+    "mol": "mole",
     "s": "secondo", "sec": "secondo",  # "sec" not actually legal
 
     # derived units
     "Bq": "becquerel",
     "C": "coulomb",
-    "°C": "grado Celsius", "℃": "grado Celsius",  # should only take negative powers
+    "°C": "grado celsius", "℃": "grado celsius", # should only take negative powers
     "F": "farad",
     "Gy": "gray",
-    "H": "henry",
+    "H": "enri",
     "Hz": "hertz",
     "J": "joule",
     "kat": "katal",
@@ -115,43 +392,43 @@
     "Wb": "weber",
 
     # accepted (plus a few variants) that take SI prefixes
-    "l": "litro", "L": "litro", "ℓ": "litro", # Should only take negative powers; British spelling works for US also
-    "t": "tonnellata",             # should only take positive powers
+    "l": "litro", "L": "litro", "ℓ": "litro",  # Should only take negative powers; British spelling works for US also
+    "t": "tonnellata",           # should only take positive powers
     "Da": "dalton",
     "Np": "neper",               # should only take negative powers
     "u": "unità di massa atomica",     # 'u' is correct: https://en.wikipedia.org/wiki/Dalton_(unit)
     "eV": "elettronvolt",
     "rad": "radiante",             # should only take negative powers
-    "sr": "stereoradiante",      # should only take negative powers
-
+    "sr": "steradiante",           # should only take negative powers
+  
     # others that take a prefix
-    "a": "anno",                 # should only take positive powers
-    "as": "secondo d'arco",    # see en.wikipedia.org/wiki/Minute_and_second_of_arc
+    "a": "anno",               # should only take positive powers
+    "as": "secondo arco",          # see en.wikipedia.org/wiki/Minute_and_second_of_arc
 
-    # technically wrong, but used in practice with SI Units (and only positive powers)
-    "b": "bit",                 # should only take positive powers
-    "B": "byte",                # should only take positive powers
+    # technically wrong, but used in practice with SI Units
+    "b": "bit",               # should only take positive powers
+    "B": "byte",              # should only take positive powers
     "Bd": "baud",             # should only take positive powers
   }
 
 
 - UnitsWithoutPrefixes: {
     # time
-    "″": "secondo", "\"": "secondo", 
-    "′": "minuto", "'": "minuto","min": "minuto",
-    "h": "ora", "hr": "ora", "Hr": "ora",
-    "d": "giorno", "dy": "giorno",
-    "w": "settimana", "wk": "settimana",
-    "y": "anno", "yr": "anno",    
+    "″": "secondo", "\"": "secondo",
+    "′": "minute", "'": "minuto","min": "minuto",
+    "h": "hour", "ora": "ora", "ora": "ora",
+    "d": "giorno", "dy": "giorno", "gg": "giorno",
+    "w": "week", "wk": "week", "sett": "settimana",
+    "y": "anno", "yr": "anno", "AA": "anno",    
 
     # angles
-    "°": "grado", "deg": "grado", # should only take negative powers
-    "arcmin": "minuto d'arco",
-    "amin": "minuto d'arco",
-    "am": "minuto d'arco",
-    "MOA": "minuto d'arco",
-    "arcsec": "secondo d'arco",
-    "asec": "secondo d'arco",
+    "°": "degree", "deg": "grado", # should only take negative powers
+    "arcmin": "minuto arco",
+    "amin": "minuto arco",
+    "am": "minuto arco",
+    "MOA": "minuto arco",
+    "arcsec": "secondo arco",
+    "asec": "secondo arco",
 
     # distance
     "au": "unità astronomica", "AU": "unità astronomica",
@@ -165,45 +442,37 @@
     # "B": "bel",    # "B" more commonly means bytes
     "dB": "decibel", # already logarithmic, so not used with SI prefixes
 
-    "atm": "atmosfera",
     "amu": "unità di massa atomica",
+    "atm": "atmosfera",
     "bar": "bar",
     "cal": "caloria",
-    "Ci": "curio",
-    "grad": "gradiente",
-    "M": "molare",
+    "Ci": "curie",
+    "grad": "gradian",
+    "M": "molar",
     "R": "roentgen",
     "rpm": "giri al minuto",
-    "℧": "mho",
-    "dyn": "dina",
+    "℧": "m-h-o",
+    "dyn": "dyne",
     "erg": "erg",
 
-    # special case overrides because prefixes with the base "metro" all get accents
-    "Qm": "quettametro", "Rm": "ronnametro", "Ym": "yottametro", "Zm": "zettametro", "Em": "exametro", "Pm": "petametro",
-      "Tm": "terametro", "Gm": "gigametro", "Mm": "megametro", "km": "chilometro", "hm": "ettometro", "dam": "decametro",
-    "dm": "decimetro", "cm": "centimetro", "mm": "millimetro", "µm": "micrometro", "nm": "nanometro", "pm": "picometro",
-    #  conflicts: "fm": "femtómetro", "am": "attómetro",
-    "zm": "zeptómetro", "ym": "yoctómetro", "rm": "rontómetro", "qm": "quectómetro",
-  
     # powers of 2 used with bits and bytes
-    "Kib": "kibibit", "Mib": "mebibit", "Gib": "gibibit", "Tib": "tebibit", "Pib": "pebibit", "Eib": "exbibit", "Zib": "zebibit", "Yib": "yobibit",
-    "KiB": "kibibyte", "MiB": "mebibyte", "GiB": "gibibyte", "TiB": "tebibyte", "PiB": "pebibyte", "EiB": "exbibyte", "ZiB": "zebibyte", "YiB": "yobibyte",
+    "Kib": "kibi-bit", "Mib": "mebi-bit", "Gib": "gibi-bit", "Tib": "tebi-bit", "Pib": "pebi-bit", "Eib": "exbi-bit", "Zib": "zebi-bit", "Yib": "yobi-bit",
+    "KiB": "kibi-byte", "MiB": "mebi-byte", "GiB": "gibi-byte", "TiB": "tebi-byte", "PiB": "pebi-byte", "EiB": "exbi-byte", "ZiB": "zebi-byte", "YiB": "yobi-byte",
   }
-
 
   # this will only be used if the language is English, so it can be empty for other countries
 - EnglishUnits: {
     # length
-    "in": "inch",
-    "ft"    : "foot",
-    "mi": "mile",
+    "in": "pollice",
+    "ft": "piede",
+    "mi": "miglio",
     "rd": "rod",
     "li": "link",
     "ch": "chain",
 
     # area
-    "sq in": "square inch", "sq. in": "square inch", "sq. in.": "square inch",
-    "sq ft": "square foot", "sq. ft": "square foot", "sq. ft.": "square foot",
+    "sq in": "pollice quadrato", "sq. in": "pollice quadrato", "sq. in.": "pollice quadrato",
+    "sq ft": "piede quadrato", "sq. ft": "piede quadrato", "sq. ft.": "piede quadrato",
     "sq yd": "square yard", "sq. yd": "square yard", "sq. yd.": "square yard",
     "sq mi": "square mile", "sq. mi": "square mile", "sq. mi.": "square mile",
     "ac": "acre",
@@ -220,7 +489,7 @@
     "tbl": "tablespoon",
 
     # liquid
-    "fl dr": "fluid drams",
+    "fl dr": "fluid dram",
     "fl oz": "fluid ounce",
     "gi": "gill",
     "cp": "cup", "cup": "cup",
@@ -250,23 +519,33 @@
 
 - CurrencySymbols: {
     "$": "dollar", "¢": "cent", "€": "euro", "£": "pound", "₡": "colón", "₤": "lira", "₨": "rupee",
-    "₩": "won", "₪": "shekel", "₱": "peso", "₹": "rupia", "₺": "lira", "₿": "bitcoin",
+    "₩": "won", "₪": "shekel", "₱": "peso", "₹": "rupee", "₺": "lira", "₿": "bitcoin",
+    # could add more currencies...
   }
 
 - PluralForms: {
   # FIX: this needs to be flushed out
-    "lumen": "lumen",
-    "kelvin": "kelvin",
-    "grado Celsius": "gradi Celsius",
-    "grado Fahrenheit": "gradi Fahrenheit",
-
     "inch": "inches", "square inch": "square inches", "cubic inch": "cubic inches",
     "foot": "feet", "square foot": "square feet", "cubic foot": "cubic feet",
     "board foot": "board feet",
+    "degree celsius": "degrees celsius",
+    "degree fahrenheit": "degrees fahrenheit",
+    "henry": "henries",
     "hertz": "hertz",
+    "lux": "lux",
     "siemens": "siemens",
     "revolution per minute": "revolutions per minute",
+    "mile per hour": "miles per hour",
+    "mile per gallon": "miles per gallon",
+    "colón": "colones", "lira": "lire", "won": "won", "bitcoin": "bitcoin"
   }
+
+# Lines starting with "#" are a comment
+# Each definition in this file is of the form
+# - name: { "...", "..." "..." }
+# For numbers, 
+# - name: [] "...", "..." "..." ]
+
 
 # ----------------  Cardinal and Ordinal Numbers  --------------------------
 # The following definitions are used to convert numbers to words
@@ -288,76 +567,66 @@
 
 # For English, a regular pattern starts at twenty
 - NumbersOnes: [
-         "zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove",
-         "dieci", "undici", "dodici", "tredici", "quattordici", "quindici", "sedici",
-         "diciassette", "diciotto", "diciannove"
+        "zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove",
+        "dieci", "undici", "dodici", "tredici", "quattordici", "quindici", "sedici",
+        "diciassette", "diciotto", "diciannove"
     ]
 
 - NumbersOrdinalOnes: [
-         "zero", "primo", "secondo", "terzo", "quarto", "quinto", "sesto", "settimo", "ottavo", "nono",
-         "decimo", "undicesimo", "dodicesimo", "tredicesimo", "quattordicesimo", "quindicesimo", "sedicesimo",
-         "diciassettesimo", "diciottesimo", "diciannovesimo"
+        "zero", "primo", "secondo", "terzo", "quarto", "quinto", "sesto", "settimo", "ottavo", "nono",
+        "decimo", "undicesimo", "dodicesimo", "tredicesimo", "quattordicesimo", "quindicesimo", "sedicesimo",
+        "diciassettesimo", "diciottesimo", "diciannovesimo"
     ]
 
 - NumbersOrdinalPluralOnes: [
-         "zeri", "primi", "secondi", "terzi", "quarti", "quinti", "sesti", "settimi", "ottavi", "noni",
-         "decimi", "undicesimi", "dodicesimi", "tredicesimi", "quattordicesimi", "quindicesimi", "sedicesimi",
-         "diciassettesimi", "diciottesimi", "diciannovesimi"
+        "zeri", "primi", "secondi", "terzi", "quarti", "quinti", "sesti", "settimi", "ottavi", "noni",
+        "decimi", "undicesimi", "dodicesimi", "tredicesimi", "quattordicesimi", "quindicesimi", "sedicesimi",
+        "diciassettesimi", "diciottesimi", "diciannovesimi"
     ]
 
-    # stop when regularity begins
+# stop when regularity begins
 - NumbersOrdinalFractionalOnes: [
-         "zero", "primo", "mezzo"
+        "zero", "primo", "mezzo"
     ]
 
-    # stop when regularity begins
+# stop when regularity begins
 - NumbersOrdinalFractionalPluralOnes: [
-         "zeri", "primi", "mezzi"
+        "zeri", "primi", "mezzi"     
     ]
 
 
-    # What to use for multiples of 10
 - NumbersTens: [
-         "", "dieci", "venti", "trenta", "quaranta", "cinquanta", "sessanta", "settanta", "ottanta", "novanta"
+        "", "dieci", "venti", "trenta", "quaranta", "cinquanta", "sessanta", "settanta", "ottanta", "novanta"
     ]
 
 - NumbersOrdinalTens: [
-         "", "décimo", "ventesimo", "trentesimo", "quarantesimo", "cinquantesimo", "sessantesimo", "settantesimo", "ottantesimo", "novantesimo"
+        "", "decimo", "ventesimo", "trentesimo", "quarantesimo", "cinquantesimo", "sessantesimo", "settantesimo", "ottantesimo", "novantesimo"
     ]
 
 - NumbersOrdinalPluralTens: [
-         "", "decimi", "ventesimi", "trentesimi", "quarantesimi", "cinquantesimi", "sessantesimi", "settantesimi", "ottantesimi", "novantesimi"
+        "", "decimi", "ventesimi", "trentesimi", "quarantesimi", "cinquantesimi", "sessantesimi", "settantesimi", "ottantesimi", "novantesimi"
     ]
 
-
 - NumbersHundreds: [
-       "", "cento", "duecento", "trecento", "quattrocento", "cinquecento",
-         "seicento", "settecento", "ottocento", "novecento"
+        "", "cento", "duecento", "trecento", "quattrocento", "cinquecento",  "seicento", "settecento", "ottocento", "novecento"
     ]
 
 - NumbersOrdinalHundreds: [
-       "", "centunesimo", "centoduesimo", "centotreesimo", "centoquattresimo", "centocinquesimo",
-         "centoseiesimo", "centosettesimo", "centottesimo", "centonovesimo"
+        "", "centesimo", "duecentesimo", "trecentesimo", "quattrocentesimo", "cinquecentesimo",  "seicentesimo", "settecentesimo", "ottocentesimo", "novecentesimo"
     ]
 
 - NumbersOrdinalPluralHundreds: [
-       "", "centesimi", "duecentesimi", "trecentesimi", "quattrocentesimi", "cinquecentesimi",
-         "seicentesimi", "settecentesimi", "ottocentesimi", "novecentesimi"
+        "", "centesimi", "duecentesimi", "trecentesimi", "quattrocentesimi", "cinquecentesimi", "seicentesimi", "settecentecesimi", "ottocentesimi", "novecentesimi"
     ]
-      
 
-    # At this point, hopefully the language is regular. If not, code needs to be written
 - NumbersLarge: [
-         "", "migliaia", "milioni", "miliardi", "trilioni", "quadrilioni",
-         "quintilioni", "sestilioni", "settilioni", "ottilioni", "novilioni",
+        "", "mille", "milione", "miliardo", "bilione", "biliardo",  "trilione", "triliardo", "quadrilione", "quadriliardo", "quintilione"
     ]
-      
+
 - NumbersOrdinalLarge: [
-         "", "millesimo", "milionesimo", "millemilionesimo", "trilionesimo", "quadrilionesimo",
-         "quintilionesimo", "sestilionesimo", "settilionesimo", "ottilionesimo", "novilionesimo"
+        "", "millesimo", "milionesimo", "miliardesimo", "bilionesimo", "biliardesimo",  "trilionesimo", "triliardesimo", "quadrilionesimo", "quadriliardesimo", "quintilionesimo"
     ]
-      
+
 - NumbersOrdinalPluralLarge: [
-         "", "millesimi", "milionesimi", "migliaia di milionesimi", "trilionesimi", "quadrilionesimi",
-         "quintilionesimi", "sestilionesimi", "sttilionesimi", "ottilionesimi", "novilionesimi"
+        "", "millesimi", "milionesimi", "miliardesimi", "bilionesimi", "biliardesimi",  "trilionesimi", "triliardesimi", "quadrilionesimi", "quadriliardesimi", "quintilionesimi"
     ]
