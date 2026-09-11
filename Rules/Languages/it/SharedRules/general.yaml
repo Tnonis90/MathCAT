@@ -362,7 +362,11 @@
   match: ".='sin'"
   replace:
   - bookmark: "@id"
-  - T: "seno"      # phrase(the 'sine' of the angle)
+  - test:
+      if: "$Verbosity='Terse'"
+      then: [T: "sen"]      #Sen is the Italian abbreviation for Sine, used often when rapidly scrolling through expressions, so we use it for Terse
+      else: [T: "seno di"]      # phrase(find the 'cosine' in a right-angle triangle)
+
 - name: cos
   tag: mi
   match: ".='cos'"
@@ -371,7 +375,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "cos"]      # phrase('cos' is the abbreviation for cosine)
-      else: [T: "coseno"]      # phrase(find the 'cosine' in a right-angle triangle)
+      else: [T: "coseno di"]      # phrase(find the 'cosine' in a right-angle triangle)
 - name: tan
   tag: mi
   match: ".='tan' or .='tg'"
@@ -380,7 +384,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "tan"]      # phrase(the 'tan' is the ratio of the opposite to the adjacent side of a right-angled triangle)
-      else: [T: "tangente"]      # phrase(a 'tangent' is a straight line that touches a curve)
+      else: [T: "tangente di"]      # phrase(a 'tangent' is a straight line that touches a curve)
 - name: sec
   tag: mi
   match: ".='sec'"
@@ -389,7 +393,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "sec"]      # phrase(to 'seek' a solution)
-      else: [T: "secante"]      # phrase(a 'secant' intersects a curve at two or more points)
+      else: [T: "secante di"]      # phrase(a 'secant' intersects a curve at two or more points)
 - name: csc
   tag: mi
   match: ".='csc'"
@@ -398,7 +402,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "cosec"]      # phrase(we will 'cosecant' a solution)
-      else: [T: "cosecante"]      # phrase(the 'cosecant' is the reciprocal of the secant)
+      else: [T: "cosecante di"]      # phrase(the 'cosecant' is the reciprocal of the secant)
 - name: cot
   tag: mi
   match: ".='cot'"
@@ -407,7 +411,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "cotan"]      # phrase(find the 'cotangent' in a right-angle triangle)
-      else: [T: "cotangente"]      # phrase(the 'cotangent' is the reciprocal of the tangent)
+      else: [T: "cotangente di"]      # phrase(the 'cotangent' is the reciprocal of the tangent)
 
 - name: sinh
   tag: mi
@@ -417,7 +421,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "sen-h"]      # phrase(the word 'sinch' is an abbreviation for hyperbolic sine)
-      else: [T: "seno iperbolico"]      # phrase(the 'hyperbolic sine' is used in mathematics)
+      else: [T: "seno iperbolico di"]      # phrase(the 'hyperbolic sine' is used in mathematics)
 - name: cosh
   tag: mi
   match: ".='cosh'"
@@ -426,7 +430,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "cos-h"]      # phrase('cosh' is an abbreviation of hyperbolic cosine)
-      else: [T: "coseno iperbolico"]      # phrase(the 'hyperbolic cosine' is a mathematical function)
+      else: [T: "coseno iperbolico di"]      # phrase(the 'hyperbolic cosine' is a mathematical function)
 - name: tanh
   tag: mi
   match: ".='tanh'"
@@ -435,7 +439,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "tan-h"]      # phrase('tanch' is shorthand for hyperbolic tangent)
-      else: [T: "tangente iperbolica"]      # phrase('hyperbolic tangent' is a mathematical function)
+      else: [T: "tangente iperbolica di"]      # phrase('hyperbolic tangent' is a mathematical function)
 - name: sech
   tag: mi
   match: ".='sech'"
@@ -444,7 +448,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "sec-h"]      # phrase('sheck' is shorthand for hyperbolic secant)
-      else: [T: "secante iperbolica"]      # phrase('hyperbolic secant' is a mathematical function)
+      else: [T: "secante iperbolica di"]      # phrase('hyperbolic secant' is a mathematical function)
 - name: csch
   tag: mi
   match: ".='csch'"
@@ -453,7 +457,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "cosec-h"]      # phrase('cosheck' is shorthand for hyperbolic cosecant)
-      else: [T: "cosecante iperbolica"]      # phrase('hyperbolic cosecant' is a mathematical function)
+      else: [T: "cosecante iperbolica di"]      # phrase('hyperbolic cosecant' is a mathematical function)
 - name: coth
   tag: mi
   match: ".='coth'"
@@ -462,7 +466,7 @@
   - test:
       if: "$Verbosity='Terse'"
       then: [T: "cotan-h"]      # phrase('cotanch' is shorthand for hyperbolic cotangent)
-      else: [T: "cotangente iperbolica"]      # phrase(the 'hyperbolic cotangent' is a mathematical function)
+      else: [T: "cotangente iperbolica di"]      # phrase(the 'hyperbolic cotangent' is a mathematical function)
 - name: exponential
   tag: mi
   match: ".='exp'"
@@ -470,7 +474,7 @@
   - bookmark: "@id"
   - test:
       if: "$Verbosity='Terse'"
-      then: [T: "exp"]      # phrase('exp' means exponential function)
+      then: [T: "esp"]      # phrase('exp' means exponential function)
       else: [T: "esponenziale"]      # phrase('exponential' function)
 - name: covariance
   tag: mi
@@ -496,7 +500,7 @@
       then: [T: "logaritmo"]      # phrase(the 'log' function is used in mathematics)
     - else_if: "$Verbosity='Terse'"
       then: [spell: "'ln'"]
-      else: [T: "logaritmo naturale"]      # phrase(the 'natural log' function is used in mathematics)
+      else: [T: "logaritmo naturale di"]      # phrase(the 'natural log' function is used in mathematics)
 
 
 - name: multi-line
@@ -601,12 +605,12 @@
       # --- CASO DETERMINANTE (Maschile) ---
       if: "self::m:determinant"
       then:
-      - T: "il"             # l'articolo maschile va prima
+      #- T: "il"             # l'articolo maschile va prima, commented out
       - T: "determinante"
       
       # --- CASO MATRICE (Femminile) ---
       else:
-      - T: ""             # l'articolo femminile va prima, remove for now
+      #- T: ""             # l'articolo femminile va prima, remove for now, commented out
       - T: "matrice"
   - T: "uno per uno"        # traduzione di "1 by 1"
   - T: "con accesso"      # phrase(the 2 by 2 matrix 'with entry' x)
@@ -619,10 +623,10 @@
   match: "not( */*/*[not(self::m:mn and .= 0)] )"
   replace:
   - T: "matrice"                     # Introduciamo l'oggetto, remove for now
+  - T: "nulla"                          # In italiano "zero matrix" si dice preferibilmente "matrice nulla" (o "zero") alla fine
   - x: count(*)                         # Numero di righe (es. 2)
   - T: "per"                            # X righe "per" Y colonne
   - x: count(*[self::m:mtr][1]/*)       # Numero di colonne (es. 3)
-  - T: "nulla"                          # In italiano "zero matrix" si dice preferibilmente "matrice nulla" (o "zero") alla fine
   - pause: long
 
 - name: identity-matrix
@@ -634,10 +638,10 @@
   - "not( */*[count(preceding-sibling::*) != count(../preceding-sibling::*)]/*[not(self::m:mn and .= 0)] )" # off-diagonal
   replace:
   - T: "matrice"                     # Introduciamo l'oggetto, no article
+  - T: "identità"                       # Specifichiamo il tipo alla fine
   - x: count(*)                         # Numero di righe
   - T: "per"                            #X righe "per" y colonne
   - x: count(*[self::m:mtr][1]/*)       # Numero di colonne
-  - T: "identità"                       # Specifichiamo il tipo alla fine
   - pause: long
 
 - name: diagonal-matrix
@@ -677,9 +681,9 @@
       if: "$ClearSpeak_Matrix = 'Vector' or $ClearSpeak_Matrix = 'EndVector'"
       then: [T: "vettore"]
       else: [T: "matrice"]
-  - pause: long
   - x: count(*)
-  - T: "per una colonna"
+  - T: "per 1"
+  - pause: long
   - x: "*/*"
   - test:
       if: "$ClearSpeak_Matrix = 'EndMatrix' or $ClearSpeak_Matrix = 'EndVector'"
@@ -699,9 +703,9 @@
       if: "$ClearSpeak_Matrix = 'Vector' or $ClearSpeak_Matrix = 'EndVector'"
       then: [T: "vettore"]
       else: [T: "matrice"]
-  - T: "di"
+  #- T: "di" #commented out
   - x: "count(*)"
-  - T: "per una colonna"      # spell "1" out so the synth says "una colonna"
+  - T: "per 1"      
   - pause: long
   - x: "*"
   - test:
@@ -746,11 +750,11 @@
   - test:
       if: "$ClearSpeak_Matrix = 'Vector' or $ClearSpeak_Matrix = 'EndVector'"
       then: [T: "vettore"] #"Row" is redundant
-      else: [T: "matrice riga"] #"Row" is redundant
+      else: [T: "matrice"] #"Row" is redundant
   - T: "uno per"
   - x: "count(*/*)"
   - pause: long
-  - pause: medium
+  #- pause: medium
   - x: "*/*"
   - test:
       if: "$ClearSpeak_Matrix = 'EndMatrix' or $ClearSpeak_Matrix = 'EndVector'"
@@ -777,8 +781,7 @@
       else:
       - T: "" #placeholder
       - T: "matrice"
-  - T: "di"
-  - x: count(*)
+      - x: count(*)
   - T: "per"
   - x: count(*[self::m:mtr][1]/*)
   - pause: long
@@ -805,7 +808,7 @@
       else:
       - T: "" #placeholder
       - T: "matrice"
-  - T: "di"
+  #- T: "di" #commented out
   - x: "count(*)"
   - T: "per"
   - x: "count(*[self::m:mtr][1]/*)"
@@ -1109,7 +1112,7 @@
   tag: none
   match: "../../*[self::m:chemical-formula or self::m:chemical-nuclide]"
   replace:
-  - T: "" # don't say anything
+  - t: "" # don't say anything
 
 - name: ignore-intent-wrapper
   tag: intent-wrapper

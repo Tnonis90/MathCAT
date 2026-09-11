@@ -43,14 +43,14 @@
     "complex-conjugate":"function=coniugato complesso",
     "complex-arg":"function=argomento",
     "real-part": "function=parte reale",
-    "imaginary-part": "function=imaginary part: the imaginary part: parte immaginaria",
+    "imaginary-part": "function=parte immaginaria: la parte immaginaria: parte immaginaria",
 
     "polar-coordinate":"function=coordinata polare; virgola",
     "spherical-coordinate":"function=coordinata sferica; virgola; virgola",
     "cartesian-coordinate":"function=coordinata cartesiana; virgola",
     "coordinate":"function=coordinata; virgola",
     "floor":"function=parte intera inferiore",
-    "ceiling":"function=parte intera inferiore",
+    "ceiling":"function=parte intera superiore",
     "round":"function=valore arrotondato",
     "fractional-part":"function=parte frazionaria",
 
@@ -67,12 +67,12 @@
 
 
     ### Sets
-    "set": "function= ; insieme: lìinsieme",
+    "set": "function= ; insieme: l'insieme",
     "set-difference":"function=differenza tra insiemi; and || infix=meno", # NOTE: not tested
     "complement":"function=complemento",
     #"empty-set":"nofix=empty set",
     "cardinality":"function=cardinalità", # NOTE: does not have a defined speech template in website
-    "list":"function=list",
+    "list":"function=lista",
     "tuple": "function= ; tupla: la tupla",
 
 
@@ -83,7 +83,7 @@
     "sine":"function=sen: seno",
     "cosine":"function=cos: coseno",
     "tangent":"function=tan: tangente",
-    "secant":"function=sec: secant",
+    "secant":"function=sec: secante",
     "cosecant":"function=cosec: cosecante",
     "cotangent":"function=cotan: cotangente",
 
@@ -361,7 +361,7 @@
 #   The SI prefixes can be used with several of accepted units, but not, for example, with the non-SI units of time.
 - SIUnits: {
     # base units
-    "A": "amp",
+   "A": "amp",
     "cd": "candela",
     "K": "kelvin", "K": "kelvin", # U+212A
     "g": "grammo",

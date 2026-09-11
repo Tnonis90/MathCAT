@@ -34,7 +34,7 @@
   replace:
   - test:
       if: "$Verbosity!='Terse'"
-      then: [OT: "la"]      # phrase('the' square root of 25)
+      then: [OT: ""]      # phrase('the' square root of 25), don't say in Italian
   - test:
       if: "$ClearSpeak_Roots = 'PosNegSqRoot' or $ClearSpeak_Roots = 'PosNegSqRootEnd'"
       then:
@@ -83,8 +83,10 @@
         then: [T: "radice quadrata"]      # phrase(5 is the 'square root' of 25)
       - else_if: "*[2][.='3']"
         then: [T: "radice cubica"]      # phrase(5 is the 'cube root' of 625)
-      - else: [T: "radice", x: "ToOrdinal(*[2])"]      # phrase(the square 'root' of 25)
+      #- else: [T: "radice", x: "concat(substring(ToOrdinal(*[2]), 1, string-length(ToOrdinal(*[2])) - 1), 'a')"]      # phrase(the square 'root' of 25)
+      - else: [T: "radice", x: "ToOrdinal(*[2])"]
       else:
+      - T: radice"
       - test:
           if: "*[2][self::m:mi][string-length(.)=1]"
           then:
@@ -92,7 +94,6 @@
           #- pronounce: [text: "-th", ipa: "θ", sapi5: "th", eloquence: "T"]
           - T: "esima"
           else: [x: "*[2]"]
-      - T: "radice"      # phrase(the square 'root' of 36)
   - test:
       if: "$Verbosity!='Terse'"
       then: [T: "di"]      # phrase(the square root 'of' 36)
@@ -263,16 +264,16 @@
   replace:
   - test:
       if: "$Verbosity!='Terse'"
-      then: [OT: "la"]      # phrase('the' third power of 2)
+      then: [OT: ""]      # phrase('the' third power of 2)
   - bookmark: "*[2]/@id"
+  - x: "*[1]"
+  - T: "alla"
   - test:
       if: "*[2][self::m:mn][not(contains(., '.'))]"
-      then: [x: "ToOrdinal(*[2])"]
+      then: [x: "concat(substring(ToOrdinal(*[2]), 1, string-length(ToOrdinal(*[2])) - 1), 'a')"]
       else: [x: "*[2]"]
-  - T: "potenza di"      # phrase(the third 'power of' 6)
   - pause: short
-  - x: "*[1]"
-
+  
 - name: AfterPower-nested
   tag: power
   match: # directly a superscript or an mrow that contains a superscript
@@ -280,7 +281,7 @@
   - "*[2][self::m:power or self::m:power or self::m:mrow[m:power]]"
   replace:
   - x: "*[1]"
-  - T: "elevato all'esponente"      # phrase(5 'raised to the exponent' x plus 1)
+  - T: "elevato alla"      # phrase(5 'raised to the exponent' x plus 1)
   - pause: short
   - x: "*[2]"
   - pause: short
@@ -313,17 +314,19 @@
 
 - name: simple-integer
   tag: power
-  match: "*[2][self::m:mn][not(contains(., '.'))]"
+  match: 
+  - "*[2][self::m:mn][not(contains(., '.'))] and"
+  - "not($ClearSpeak_Exponents = 'auto' and (*[2][.='2'] or *[2][.='3']))"
   replace:
   - x: "*[1]"
-  - T: "alla"      # phrase(2 raised 'to the' power 7)
+  - T: "elevato alla"
   - test:
-      if: "*[2][.>0]"
-      then: [x: "ToOrdinal(*[2])"]
-      else: [x: "*[2]"]
-  - test:
-      if: "$ClearSpeak_Exponents != 'Ordinal'"
-      then: [T: "potenza"]      # phrase(2 raised to the 'power' 7)
+      if: "*[2][.>0] and substring(ToOrdinal(*[2]), string-length(ToOrdinal(*[2]))) = 'o'"
+      then:
+      - x: "concat(substring(ToOrdinal(*[2]), 1, string-length(ToOrdinal(*[2])) - 1), 'a')"
+      else:
+      - x: "ToOrdinal(*[2])"
+
 
 - name: simple-negative-integer
   tag: power
@@ -333,23 +336,21 @@
   - "    ]"
   replace:
   - x: "*[1]"
-  - T: "alla"      # phrase(2 raised 'to the' power 7)
+  - T: "elevato alla"      # phrase(2 raised 'to the' power 7)
   - x: "*[2]"
-  - test:
-      if: "$ClearSpeak_Exponents != 'Ordinal'"
-      then: [T: "potenza"]      # phrase(2 raised to the 'potenza' 7)
+  #- test:
+      #if: "$ClearSpeak_Exponents != 'Ordinal'"
+      #then: [T: "potenza"]      # phrase(2 raised to the 'potenza' 7)
+      #In Italian we never use ordinals with negative exponents.
+      
 
 - name: simple-var
   tag: power
   match: "*[2][self::m:mi][string-length(.)=1]"
   replace:
   - x: "*[1]"
-  - T: "alla"      # phrase(3 raised 'to the' power 7)
-  - x: ToOrdinal("*[2]")
-  #- pronounce: [text: "-th", ipa: "θ", sapi5: "th", eloquence: "T"], not needed in ITA
-  - test:
-      if: "$ClearSpeak_Exponents != 'Ordinal'"
-      then: [T: "potenza"]      # phrase(2 raised to the 'power' 7)
+  - T: "elevato alla"      # phrase(3 raised 'to the' power 7)
+  - x: "*[2]"
 
 # match nested exponent, where the nested exponent is has the power 2 or 3 (n below)
 #   [xxx]^n, - [xxx]^n, [xxx] var^n, -[xxx] var^n
@@ -376,7 +377,7 @@
   - x: "*[1]"
   - T: "elevato alla"      # phrase(x 'raised to the' second power)
   - x: "*[2]"
-  - T: "potenza"      # phrase(x raised to the second 'power')
+  #- T: "potenza"      # phrase(x raised to the second 'power')
 
 - # - [xxx]^n
   name: nested-negative-squared-or-cubed
@@ -397,7 +398,7 @@
   - x: "*[1]"
   - T: "elevato alla"      # phrase(x 'raised to the' second power)
   - x: "*[2]"
-  - T: "potenza"      # phrase(x raised to the second 'power')
+  #- T: "potenza"      # phrase(x raised to the second 'power')
 
 - # [xxx] var^n
   name: nested-var-squared-or-cubed
@@ -420,7 +421,7 @@
   - x: "*[1]"
   - T: "elevato alla"      # phrase(x 'raised to the' second power)
   - x: "*[2]"
-  - T: "potenza"      # phrase(x raised to the second 'power')
+  #- T: "potenza"      # phrase(x raised to the second 'power')
 
 - # -[xxx] var^n
   name: nested-negative-var-squared-or-cubed
@@ -445,7 +446,7 @@
   - x: "*[1]"
   - T: "elevato alla"      # phrase(x 'raised to the' second power)
   - x: "*[2]"
-  - T: "potenza"      # phrase(x raised to the second 'power')
+  #- T: "potenza"      # phrase(x raised to the second 'power')
 
 - name: default-exponent-power
   tag: power
@@ -453,7 +454,7 @@
   - "*[2][self::m:power or self::m:power or self::m:mrow[m:power]]"
   replace:
   - x: "*[1]"
-  - T: "elevato alla potenza"      # phrase(x is 'raised to the exponent')
+  - T: "elevato alla"      # phrase(x is 'raised to the exponent')
   - pause: short
   - x: "*[2]"
   - pause: short
@@ -466,7 +467,7 @@
   - x: "*[1]"
   - T: "elevato alla"      # phrase(x 'raised to the' second power)
   - x: "*[2]"
-  - T: "potenza"      # phrase(x raised to the second 'power')
+  #- T: "potenza"      # phrase(x raised to the second 'power')
 
 #
 # Some rules on mrows
@@ -548,7 +549,7 @@
       - test:
           if: "starts-with(name(.), 'open')"
           then: [T: ""]      # phrase(the interval from a to b 'not' including b), leave the text blank for IT as we say 'Excluding'
-      - T: "escluso"      # phrase(the interval from a to b not 'including' b)
+      - T: "incluso"      # phrase(the interval from a to b not 'including' b)
       - x: "*[1]"
     # logic to deal with [not] arg #1
   - test:
@@ -618,7 +619,8 @@
       then: [T: "logaritmo"]
     - else_if: "$ClearSpeak_Log = 'LnAsNaturalLog'"
       then: [T: "logaritmo naturale"]      # phrase(the 'natural log' of x)
-      else: [spell: "'ln'"]
+      else: [spell: "'ln'"]     
+  - pause: short
 
 - name: ClearSpeak-multi-line
   tag: [piecewise, system-of-equations, lines] # these are ignored in favor of the ClearSpeak prefs
