@@ -307,7 +307,7 @@
       then:
       - intent:
           name: "logarithm-with-base"
-          attrs: "data-intent-property='concat(data-intent-property, \":prefix\")'"
+          attrs: "data-intent-property='concat(data-intent-property, \":prefix:\")'"
           children: [x: "*[2]"]    # grab the base
       else:
       - intent:
@@ -380,7 +380,7 @@
 
 -
    # this captures the output for the mhchem's "<=>", "<<=>", and "<=>>" output (there are no Unicode arrows for them)
-   # this isn't a perfect match, but should be good enough and allows merging all three (see github.com/NSoiffer/MathCAT/issues/60)
+   # this isn't a perfect match, but should be good enough and allows merging all three (see github.com/daisy/MathCAT/issues/60)
    name: chemistry-mhchem-equilibrium-arrow
    tag: mover
    match:
@@ -770,7 +770,7 @@
                         contains(@data-intent-property, ':piecewise:') or
                         contains(@data-intent-property, ':matrix:') or
                         contains(@data-intent-property, ':determinant:') or
-                        contains(@data-intent-property, 'system-of-equations:') or
+                        contains(@data-intent-property, ':system-of-equations:') or
                         contains(@data-intent-property, ':lines:') )
               ]"
   replace:
@@ -787,7 +787,7 @@
                         contains(@data-intent-property, ':array:') or
                         contains(@data-intent-property, ':matrix:') or
                         contains(@data-intent-property, ':piecewise:') or
-                        contains(@data-intent-property, 'system-of-equations:') or
+                        contains(@data-intent-property, ':system-of-equations:') or
                         contains(@data-intent-property, ':lines:') )
               ]"
   replace:
@@ -898,7 +898,7 @@
   name: mtd-to-mrow
   tag: mtd
   match: "($TableProperty = 'piecewise' or $TableProperty = 'system-of-equations' or $TableProperty = 'lines') and
-          not(contains(@data-intent-property, ':equation-label'))"
+          not(contains(@data-intent-property, ':equation-label:'))"
   replace:
   - test:
       if: "@data-intent-property"

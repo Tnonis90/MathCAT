@@ -75,7 +75,7 @@ use std::fmt;
 use crate::speech::{RulesFor, SpeechRulesWithContext, MyXPath, TreeOrString};
 use std::string::ToString;
 use std::str::FromStr;
-use strum_macros::{Display, EnumString};
+use strum::{Display, EnumString};
 use regex::Regex;
 use std::sync::LazyLock;
 use sxd_xpath_no_unsafe::Value;
@@ -257,7 +257,8 @@ impl TTSCommandRule {
 /// These types should do something for all the TTSCommands
 #[allow(clippy::upper_case_acronyms)]
 #[allow(dead_code)]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Display, EnumString)]
+#[strum(ascii_case_insensitive)]
 pub enum TTS {
     None,
     SSML,
@@ -668,18 +669,16 @@ impl TTS {
     /// There is a bias towards pausing more _after_ longer strings.
     pub fn compute_auto_pause(&self, prefs: &PreferenceManager, before: &str, after: &str) -> Result<String> {
         static REMOVE_XML: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<.+?>").unwrap()); // punctuation ending with a '.'
-        let before_len;
-        let after_len;
-        match self {
+        
+        
+        let (before_len, after_len) = match self {
             TTS::SSML | TTS::SAPI5 => {
-                before_len = REMOVE_XML.replace_all(before, "").len();
-                after_len = REMOVE_XML.replace_all(after, "").len();
+                (REMOVE_XML.replace_all(before, "").len(), REMOVE_XML.replace_all(after, "").len())
             },
             _ => {
-                before_len = before.len();
-                after_len = after.len();
+                (before.len(), after.len())
             },
-        }
+        };
 
         // pause values are not cut in stone
         // the calculation bias to 'previous' is based on MathPlayer which used '30 * #-of-descendants-on-left
@@ -766,6 +765,13 @@ impl TTS {
 mod tests {
     use super::*;
     use yaml_rust::YamlLoader;
+
+    #[test]
+    fn tts_display_and_case_insensitive_parse() {
+        assert_eq!(TTS::SSML.to_string(), "SSML");
+        assert_eq!("sapi5".parse::<TTS>(), Ok(TTS::SAPI5));
+        assert_eq!("NoNe".parse::<TTS>(), Ok(TTS::None));
+    }
 
     #[test]
     /// Verifies pronounce YAML builds and renders all supported fields.

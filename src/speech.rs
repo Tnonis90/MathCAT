@@ -16,6 +16,7 @@ use sxd_xpath_no_unsafe::{Factory, Value, XPath};
 use sxd_xpath_no_unsafe::nodeset::Node;
 use std::fmt;
 use std::time::SystemTime;
+use strum::Display;
 use crate::definitions::read_definitions_file;
 use crate::errors::*;
 use crate::prefs::*;
@@ -151,7 +152,7 @@ fn speak_rules(rules: &'static std::thread::LocalKey<RefCell<SpeechRules>>, math
         // debug!("Speech string: {}", speech_string);
         // Note: [[...]] is added around a matching child, but if the "id" is on 'mathml', the whole string is used
         if !rules_with_context.nav_node_id.is_empty() {
-            // See https://github.com/NSoiffer/MathCAT/issues/174 for why we can just start the speech at the nav node
+            // See https://github.com/daisy/MathCAT/issues/174 for why we can just start the speech at the nav node
             let raw_intent_attr = mathml.attribute_value("data-intent-property");
             let intent_attr = raw_intent_attr.as_deref().unwrap_or_default();
             if let Some(start) = speech_string.find("[[") {
@@ -205,17 +206,6 @@ fn yaml_type_err(yaml: &Yaml, str: &str) -> Error {
     anyhow!("Expected {}, found {}", str, yaml_to_type(yaml))
 }
 
-// fn yaml_key_err(dict: &Yaml, key: &str, yaml_type: &str) -> String {
-//     if dict.as_hash().is_none() {
-//        return format!("Expected dictionary with key '{}', found\n{}", key, yaml_to_string(dict, 1));
-//     }
-//     let str = &dict[key];
-//     if str.is_badvalue() {
-//         return format!("Did not find '{}' in\n{}", key,  yaml_to_string(dict, 1));
-//     }
-//     return format!("Type of '{}' is not a {}.\nIt is a {}. YAML value is\n{}", 
-//             key, yaml_type, yaml_to_type(str), yaml_to_string(dict, 0));
-// }
 
 fn find_str<'a>(dict: &'a Yaml, key: &'a str) -> Option<&'a str> {
     return dict[key].as_str();
@@ -303,7 +293,7 @@ pub fn process_include<F>(current_file: &Path, new_file_name: &str, mut read_new
             // get the subdir ...Rules/Braille/en/...
             // could have ...Rules/Braille/definitions.yaml, so 'next()' doesn't exist in this case, but the file wasn't zipped up
             if let Some(subdir) = new_file.strip_prefix(unzip_dir).unwrap().iter().next() {
-                let default_lang = if unzip_dir.ends_with("Languages") {"en"} else {"UEB;"};
+                let default_lang = if unzip_dir.ends_with("Languages") {"en"} else {"UEB"};
                 PreferenceManager::unzip_files(unzip_dir, subdir.to_str().unwrap(), Some(default_lang)).unwrap_or_default();
             }
         }
@@ -569,6 +559,10 @@ impl InsertChildren {
                     )
                 );
                 for i in 2..n_nodes+1 {
+                    // Make the 1-based index of the following child available to separators (e.g. arity glue).
+                    expanded_result.push(Replacement::SetVariables(Box::new(SetVariables {
+                        variables: VariableDefinitions::from_literal_number("InsertIndex", i as f64)?,
+                    })));
                     expanded_result.extend_from_slice(&self.replacements.replacements);
                     expanded_result.push(
                         Replacement::XPath(
@@ -715,24 +709,36 @@ impl Intent {
 
 
         /// "lift" up the children any "TEMP_NAME" child -- could short circuit when only one child
+        ///
+        /// TEMP_NAME is only ever a transport wrapper created by `replace_nodes_tree`, so wrappers can nest:
+        /// a rule whose replacement is a bare `x:` (e.g., the mrow 'matrix' rule returns `x: "*[2]"`) yields
+        /// TEMP_NAME(matrix), and the parent intent's `x: "*[1]"` wraps that again. Lifting only one level left
+        /// `power(TEMP_NAME(matrix), 2)`, spoken as "TEMP NAME of the 2 by 2 matrix ... squared" (issue #762).
+        /// Nested wrappers whose children are all elements are flattened; a leaf wrapper (text from a Text or
+        /// Attribute node) is only unwrapped when it is a direct child, matching the previous behavior.
         fn lift_children(result: Element) -> Element {
             // debug!("lift_children:\n{}", mml_to_string(result));
             // most likely there will be the same number of new children as result has, but there could be more
             let mut new_children = Vec::with_capacity(2*result.children().len());
             for child_of_element in result.children() {
-                match child_of_element {
-                    ChildOfElement::Element(child) => {
-                        if name(child) == "TEMP_NAME" {
-                            new_children.append(&mut child.children());  // almost always just one
-                        } else {
-                            new_children.push(child_of_element);
-                        }
-                    },
-                    _ => new_children.push(child_of_element),      // text()
-                }
+                push_lifted(child_of_element, &mut new_children, true);
             }
             result.replace_children(new_children);
             return result;
+
+            fn push_lifted<'a>(child_of_element: ChildOfElement<'a>, new_children: &mut Vec<ChildOfElement<'a>>, is_direct_child: bool) {
+                if let ChildOfElement::Element(child) = child_of_element && name(child) == "TEMP_NAME" {
+                    let grandchildren = child.children();
+                    let is_leaf_wrapper = grandchildren.iter().any(|gc| matches!(gc, ChildOfElement::Text(_)));
+                    if is_direct_child || !is_leaf_wrapper {
+                    	for grandchild in grandchildren {
+                            push_lifted(grandchild, new_children, false);
+                    	}
+                        return;
+                    }
+                }
+                new_children.push(child_of_element);
+            }
         }
     }    
 }
@@ -1695,6 +1701,16 @@ impl VariableDefinitions {
         return VariableDefinitions{ defs: Vec::with_capacity(len) };
     }
 
+    /// Single variable bound to a numeric literal (used when expanding `insert:` separators).
+    fn from_literal_number(name: &str, value: f64) -> Result<VariableDefinitions> {
+        let mut defs = VariableDefinitions::new(1);
+        defs.push(VariableDefinition {
+            name: name.to_string(),
+            value: MyXPath::new(value.to_string())?,
+        });
+        return Ok(defs);
+    }
+
     fn build(defs: &Yaml) -> Result<VariableDefinitions> {
         if defs.is_badvalue() {
             return Ok( VariableDefinitions::new(0) );
@@ -1757,7 +1773,7 @@ impl<'c, 'r> ContextStack<'c> {
     fn base_context(var_defs: PreferenceHashMap) -> sxd_xpath_no_unsafe::Context<'c> {
         let mut context  = sxd_xpath_no_unsafe::Context::new();
         context.set_namespace("m", "http://www.w3.org/1998/Math/MathML");
-        crate::xpath_functions::add_builtin_functions(&mut context);
+        crate::xpath_functions::register_mathcat_xpath_functions(&mut context);
         for (key, value) in var_defs {
             context.set_variable(key.as_str(), yaml_to_value(&value));
             // if let Some(str_value) = value.as_str() {
@@ -1976,26 +1992,13 @@ impl UnicodeDef {
  type UnicodeTable = Rc<RefCell<HashMap<u32,Vec<Replacement>>>>;
  type FilesAndTimesShared = Rc<RefCell<FilesAndTimes>>;
 
- #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+ #[derive(Debug, Clone, Copy, PartialEq, Eq, Display)]
  pub enum RulesFor {
      Intent,
      Speech,
      OverView,
      Navigation,
      Braille,
- }
-
- impl fmt::Display for RulesFor {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let name = match self {
-            RulesFor::Intent => "Intent",
-            RulesFor::Speech => "Speech",
-            RulesFor::OverView => "OverView",
-            RulesFor::Navigation => "Navigation",
-            RulesFor::Braille => "Braille",
-        };
-       return write!(f, "{name}");
-    }
  }
 
  
@@ -2113,11 +2116,7 @@ impl FilesAndTimes {
 
 /// `SpeechRulesWithContext` encapsulates a named group of speech rules (e.g, "ClearSpeak")
 /// along with the preferences to be used for speech.
-// Note: if we can't read the files, an error message is stored in the structure and needs to be checked.
-// I tried using Result<SpeechRules>, but it was a mess with all the unwrapping.
-// Important: the code needs to be careful to check this at the top level calls
 pub struct SpeechRules {
-    error: String,
     name: RulesFor,
     pub pref_manager: Rc<RefCell<PreferenceManager>>,
     rules: RuleTable,                              // the speech rules used (partitioned into MathML tags in hashmap, then linearly searched)
@@ -2279,7 +2278,6 @@ impl SpeechRules {
         };
 
         return SpeechRules {
-            error: Default::default(),
             name,
             rules: HashMap::with_capacity(if name == RulesFor::Intent || name == RulesFor::Speech {500} else {50}),                       // lazy load them
             rule_files: FilesAndTimes::default(),
@@ -2292,14 +2290,6 @@ impl SpeechRules {
             pref_manager: PreferenceManager::get(),
         };
 }
-
-    pub fn get_error(&self) -> Option<&str> {
-        return if self.error.is_empty() {
-             None
-        } else {
-            Some(&self.error)
-        }
-    }
 
     pub fn read_files(&mut self) -> Result<()> {
         let check_rule_files = self.pref_manager.borrow().pref_to_string("CheckRuleFiles");
@@ -2878,8 +2868,6 @@ pub fn braille_replace_chars(str: &str, mathml: Element) -> Result<String> {
             ),
             Err(e) => Err(e),
         }                   
-
-
     })
 }
 
@@ -3027,7 +3015,7 @@ cfg_if::cfg_if! {if #[cfg(not(feature = "include-zip"))] {
                 let start_main_file = rules.borrow().unicode_short_files.borrow().ft[0].clone();
 
                 // open the file, read all the contents, then write them back so the time changes
-                let contents = std::fs::read(&start_main_file.file).expect(&format!("Failed to read file {} during test", &start_main_file.file.to_string_lossy()));
+                let contents = std::fs::read(&start_main_file.file).unwrap_or_else(|_| panic!("Failed to read file {} during test", start_main_file.file.to_string_lossy()));
                 std::fs::write(start_main_file.file, contents).unwrap();
                 std::thread::sleep(Duration::from_millis(5));       // pause a little to make sure the time changes
 

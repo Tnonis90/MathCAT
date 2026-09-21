@@ -75,6 +75,17 @@ fn set_default_speech_prefs() {
         prefs.set_user_prefs("Impairment", "Blindness").unwrap();
     });
 }
+
+/// Initialize navigation prefs + MathML for `tests/Languages/*/navigate.rs`.
+/// Uses the same prefs as `src/navigate.rs` tests via [`set_navigation_test_preferences`],
+/// except `AutoZoomOut` is false (language ZoomIn speech tests need that).
+#[allow(dead_code)]     // used in testing
+pub fn init_nav(language: &str, mathml: &str) -> Result<()> {
+    set_rules_dir(abs_rules_dir_path())?;
+    set_navigation_test_preferences(language, "Enhanced", false)?;
+    set_mathml(mathml)?;
+    Ok(())
+}
 // Compare the result of speaking the mathml input to the output 'speech'
 // This uses default preferences
 #[allow(dead_code)]     // used in testing
@@ -253,7 +264,7 @@ pub fn test_intent(mathml: &str, target: &str, test_prefs: Vec<(&str, &str)>) ->
 
         let new_package = parser::parse(mathml);
         if let Err(e) = new_package {
-            panic!("Invalid MathML:\n{}\nError is: {}", &mathml, &e.to_string());
+            panic!("Invalid MathML:\n{}\nError is: {}", mathml, e);
         }
 
         let new_package = new_package.unwrap();
